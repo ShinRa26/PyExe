@@ -21,7 +21,7 @@ public class GUI extends JFrame implements ActionListener
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setSize(550,400);
 	    setLocation(500,100);
-	    setTitle("pyExe: Python scripts to Windows executables");
+	    setTitle("PyExe: Python scripts to Windows executables");
 	    guiLayout();
 	    setVisible(true);
 	  }
