@@ -13,26 +13,41 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements ActionListener 
 {
-	private JPanel pan;
+	  private JPanel pan;
 	  private JFileChooser fc;
 	  private JButton createButton, exitButton;
 	  private JCheckBox windows;
 
 	  private String filename;
 	  private String filePath;
+	  
 	  private CreateExecutable ce;
+	  private Requirements req;
 
 	  /**
 	   * GUI Constructor
 	   */
 	  public GUI()
 	  {
-	    setDefaultCloseOperation(EXIT_ON_CLOSE);
-	    setSize(550,400);
-	    setLocation(500,100);
-	    setTitle("PyExe: Python scripts to Windows executables");
-	    guiLayout();
-	    setVisible(true);
+		  req = new Requirements();
+		  JOptionPane.showMessageDialog(null, "Checking package requirements...");
+		  req.checkRequirements();
+		  
+		  if(req.getAllInstalled() == true)
+		  {
+			  JOptionPane.showMessageDialog(null, "Requirements OK!", "Requirements Met", JOptionPane.PLAIN_MESSAGE);
+		      setDefaultCloseOperation(EXIT_ON_CLOSE);
+		      setSize(550,400);
+		      setLocation(500,100);
+		      setTitle("PyExe: Python scripts to Windows executables");
+		      guiLayout();
+		      setVisible(true);
+		  }
+		  else
+		  {
+			  JOptionPane.showMessageDialog(null, "Error when checking/installing required python libraries via Pip.", "Error: Pip Error", JOptionPane.ERROR_MESSAGE);
+			  System.exit(1);
+		  }
 	  }
 	  
 	  /**
@@ -91,12 +106,14 @@ public class GUI extends JFrame implements ActionListener
 	        if(checked)
 	        {
 	          JOptionPane.showMessageDialog(null, "This feature is still in development and is not available yet!", "Feature Not Available", JOptionPane.INFORMATION_MESSAGE);
-	          //ce.createExecutableOnWindows();
+	          //int result = JOptionPane.showConfirmDialog(null, "This option requires that you have at least Python3 installed. Proceed?", "Python3 Required!", JOptionPane.YES_NO_OPTION);
+	          //if(result == JOptionPane.YES_OPTION)
+	        	  //ce.createExecutableOnWindows();
 	        }
 	        //On another OS, use pyinstaller for conversion.
 	        else
 	        {
-	          //Asks the use rif they wish to create the executable in the same directory as the script.
+	          //Asks the user if they wish to create the executable in the same directory as the script.
 	          int result = JOptionPane.showConfirmDialog(null, "Create executable in the same directory?\n(If your script relies on external libraries and files, click Yes)", "Confirm", JOptionPane.YES_NO_OPTION);
 	          
 	          if(result == JOptionPane.YES_OPTION)
