@@ -31,7 +31,7 @@ public class CreateExecutable
 	    catch(IOException e){}
 	  }
 
-	  //Creates the executable using pyinstaller
+	  //Creates the executable using pyinstaller in a user designated location
 	  public void createExecutableOtherOS(String destPath)
 	  {
 		  Process p = null;
@@ -46,5 +46,27 @@ public class CreateExecutable
 	        	p.waitFor();
 	      }
 	      catch (Exception e){}
+	  }
+	  
+	  //Creates the executable using pyinstaller in the same directory as the python script
+	  public void createExecutableOtherOS()
+	  {
+		  String[] stripFilename = absolutePath.split("/");
+		  String sameDir = "";
+		  for(int i = 0; i < stripFilename.length - 1; i++)
+			  sameDir += stripFilename[i] + "/";
+
+		  Process p = null;
+		  
+		  try
+		  {
+			  String cmd = String.format("pyinstaller \"%s\" --clean --onefile --distpath %s", absolutePath, sameDir);
+			  System.out.println("Command formmat: " + cmd);
+			  p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd});
+			  
+			  if(p != null)
+				  p.waitFor();
+		  }
+		  catch(Exception e){}
 	  }
 }

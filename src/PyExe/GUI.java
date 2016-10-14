@@ -81,17 +81,33 @@ public class GUI extends JFrame implements ActionListener
 	        //On another OS, use pyinstaller for conversion.
 	        else
 	        {
-	          String path = getDestinationPath();
+	          int result = JOptionPane.showConfirmDialog(null, "Create executable in the same directory?\n(If your script relies on external libraries and files, click Yes)", "Confirm", JOptionPane.YES_NO_OPTION);
 	          
-	          if(path != "")
+	          if(result == JOptionPane.YES_OPTION)
 	          {
-		          ce.createExecutableOtherOS(path);
+	        	  ce.createExecutableOtherOS();
 		          
 		          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
 	
 		          if(dialogOption == JOptionPane.YES_OPTION)
 		          {
-		        	  removeUnnecessaryFiles(path);
+		        	  removeUnnecessaryFiles(filePath);
+		          }
+	          }
+	          else
+	          {
+		          String path = getDestinationPath();
+		          
+		          if(path != "")
+		          {
+			          ce.createExecutableOtherOS(path);
+			          
+			          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
+		
+			          if(dialogOption == JOptionPane.YES_OPTION)
+			          {
+			        	  removeUnnecessaryFiles(path);
+			          }
 		          }
 	          }
 	        }
