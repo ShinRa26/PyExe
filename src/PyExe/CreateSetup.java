@@ -3,6 +3,11 @@ package PyExe;
 import java.io.*;
 import java.util.*;
 
+/**
+ * This class creates a setup file to be used with the py2exe library on Windows machines.
+ * @author Graham Keenan (GAK)
+ *
+ */
 public class CreateSetup 
 {
 	  private String filename;
@@ -13,7 +18,9 @@ public class CreateSetup
 	    filename = fn;
 	  }
 
-	  //Writes the setup info to a new file ("setup.py")
+	  /**
+	   * Writes the setup information to a file (setup.py) 
+	   */
 	  public void createSetupFile()
 	  {
 	    try
@@ -27,7 +34,10 @@ public class CreateSetup
 	    {}
 	  }
 
-	  //Text for the setup file.
+	  /**
+	   * Builds the setup information and bundles it into a single string.
+	   * @return THe full setup information
+	   */
 	  private String setupLayout()
 	  {
 	    String imports = "from distutils.core import setup\nimport py2exe, sys, os\n\n";
@@ -37,7 +47,7 @@ public class CreateSetup
 	    String setup3 = "zipfile=None,)";
 
 	    String fullSetup = imports + sysAppends + setup1 + setup2 + setup3;
-	//options = {'py2exe': {'bundle_files': 1}},\n\t");
+	    //options = {'py2exe': {'bundle_files': 1}},\n\t");
 	    return fullSetup;
 	  }
 }

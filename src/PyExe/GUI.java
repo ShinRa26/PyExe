@@ -4,6 +4,12 @@ import java.io.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * This class holds the GUI information and controls the logic.
+ * @author Graham Keenan (GAK)
+ *
+ */
+
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements ActionListener 
 {
@@ -16,6 +22,9 @@ public class GUI extends JFrame implements ActionListener
 	  private String filePath;
 	  private CreateExecutable ce;
 
+	  /**
+	   * GUI Constructor
+	   */
 	  public GUI()
 	  {
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -26,7 +35,9 @@ public class GUI extends JFrame implements ActionListener
 	    setVisible(true);
 	  }
 	  
-	  //Layout for the GUI
+	  /**
+	   * Layout for the GUI
+	   */
 	  private void guiLayout()
 	  {
 		  	pan = new JPanel();
@@ -49,9 +60,12 @@ public class GUI extends JFrame implements ActionListener
 		    pan.add(exitButton);
 	  }
 	  
-	  //Action events
+	  /**
+	   * Controls the action events (button clicks, etc)
+	   */
 	  public void actionPerformed(ActionEvent ae)
 	  {
+		//Clicking the Exit button
 	    if(ae.getSource() == exitButton)
 	    {
 	      int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Exit Program", JOptionPane.YES_NO_OPTION);
@@ -64,6 +78,7 @@ public class GUI extends JFrame implements ActionListener
 	    {
 	      try
 	      {
+	    	//Gets the name and path of the selected file and creates a new CreateExectuable object.
 	        File setupFile = fc.getSelectedFile();
 	        filename = setupFile.getName();
 	        filePath = setupFile.getAbsolutePath();
@@ -81,12 +96,14 @@ public class GUI extends JFrame implements ActionListener
 	        //On another OS, use pyinstaller for conversion.
 	        else
 	        {
+	          //Asks the use rif they wish to create the executable in the same directory as the script.
 	          int result = JOptionPane.showConfirmDialog(null, "Create executable in the same directory?\n(If your script relies on external libraries and files, click Yes)", "Confirm", JOptionPane.YES_NO_OPTION);
 	          
 	          if(result == JOptionPane.YES_OPTION)
 	          {
 	        	  ce.createExecutableOtherOS();
 		          
+	        	  //Asks the remove unnecessary files created with the executable
 		          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?\n(These are files created with the exectuable that will not affect the program if removed)", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
 	
 		          if(dialogOption == JOptionPane.YES_OPTION)
@@ -96,12 +113,14 @@ public class GUI extends JFrame implements ActionListener
 	          }
 	          else
 	          {
+	        	  //Creates the executable in a user designated location
 		          String path = getDestinationPath();
 		          
 		          if(path != "")
 		          {
 			          ce.createExecutableOtherOS(path);
 			          
+			          //ASks to remove unnecessary files created with the executable
 			          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
 		
 			          if(dialogOption == JOptionPane.YES_OPTION)
@@ -112,6 +131,7 @@ public class GUI extends JFrame implements ActionListener
 	          }
 	        }
 	      }
+	      //Thrown when attempting to create an executable without selecting a file.
 	      catch(NullPointerException e)
 	      {
 	        JOptionPane.showMessageDialog(null, "Please select a file!", "Select a file", JOptionPane.WARNING_MESSAGE);
@@ -120,9 +140,13 @@ public class GUI extends JFrame implements ActionListener
 	    }
 	  }
 
-	  //Gets the destination path for the build
+	  /**
+	   * Gets the user designated location to save the executable to.
+	   * @return the path to save the executable to.
+	   */
 	  private String getDestinationPath()
 	  {
+		  //Lets the user choose a directory to save the executable to.
 	    JFileChooser destLoc = new JFileChooser();
 	    destLoc.setDialogTitle("Choose save location");
 	    destLoc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -141,7 +165,10 @@ public class GUI extends JFrame implements ActionListener
 	    
 	  }
 	  
-	  //Removes the build/ folder and .spec files, leaving just the executable
+	  /**
+	   * Removes the build/ folder and .spec files, leaving just the executable (PyInstaller)
+	   * @param path The location path of the build/ folder and .spec file
+	   */
 	  private void removeUnnecessaryFiles(String path)
 	  {
 		  File temp = new File("");
@@ -173,6 +200,7 @@ public class GUI extends JFrame implements ActionListener
           }
           catch(Exception e){}
 		  
+		  //Asks user if they wish to quit upon file removal.
           int result = JOptionPane.showConfirmDialog(null, "Files removed! Quit the program?", "Files Removed", JOptionPane.YES_NO_OPTION);
           if(result == 0)
             System.exit(0);
