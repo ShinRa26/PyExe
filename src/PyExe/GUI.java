@@ -30,12 +30,40 @@ public class GUI extends JFrame implements ActionListener
 	  public GUI()
 	  {
 		  req = new Requirements();
-		  JOptionPane.showMessageDialog(null, "Checking package requirements...");
+		  
+		  /*
+		   * Source for this following piece found here: http://stackoverflow.com/questions/14126975/joptionpane-without-button
+		   * START
+		   */
+		  JOptionPane optionPane = new JOptionPane("Checking package requirements...", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+		  final JDialog dialog = new JDialog();
+		  dialog.setTitle("Checking Packages");
+		  dialog.setModal(true);
+		  dialog.setContentPane(optionPane);
+		  dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		  dialog.pack();
+		  dialog.setLocation(700, 400);
+
+		  //create timer to dispose of dialog after 5 seconds
+		  Timer timer = new Timer(2500, new AbstractAction() {
+		      @Override
+		      public void actionPerformed(ActionEvent ae) {
+		          dialog.dispose();
+		      }
+		  });
+		  timer.setRepeats(false);//the timer should only go off once
+
+		  //start timer to close JDialog as dialog modal we must start the timer before its visible
+		  timer.start();
+		  dialog.setVisible(true);
+		  /*
+		   * END
+		   */
+		  
 		  req.checkRequirements();
 		  
 		  if(req.getAllInstalled() == true)
 		  {
-			  JOptionPane.showMessageDialog(null, "Requirements OK!", "Requirements Met", JOptionPane.PLAIN_MESSAGE);
 		      setDefaultCloseOperation(EXIT_ON_CLOSE);
 		      setSize(550,400);
 		      setLocation(500,100);
