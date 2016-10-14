@@ -12,8 +12,9 @@ import java.io.*;
 
 public class CreateExecutable 
 {
-	  private String filename;
-	  private String absolutePath;
+	  private String filename; //Name of the script
+	  private String absolutePath; //Path to the script
+	  private String[] commands; //Commands to be executed by command line
 
 	  /**
 	   * Create Executable constructor
@@ -44,7 +45,9 @@ public class CreateExecutable
 	    {
 	      //Creates the setup file and  launches the py2exe converion from command line
 	      createSetupFile();
-	      Runtime.getRuntime().exec("python setup.py py2exe");
+	      String cmd = "python3 setup.py py2exe";
+	      setCommands(cmd);
+	      Runtime.getRuntime().exec(commands);
 	    }
 	    catch(IOException e){}
 	  }
@@ -61,9 +64,10 @@ public class CreateExecutable
 	    	//Creates the command to start pyinstaller
 	        String cmd = String.format("pyinstaller \"%s\" --clean --onefile --distpath %s", absolutePath, destPath);
 	        //System.out.println("Command format: " + cmd);
+	        setCommands(cmd);
 	        
 	        //Executes command
-	        p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd});
+	        p = Runtime.getRuntime().exec(commands);
 	        
 	        if(p != null)
 	        	p.waitFor();
@@ -88,13 +92,45 @@ public class CreateExecutable
 		  {
 			  //Creates the command to start pyinstaller
 			  String cmd = String.format("pyinstaller \"%s\" --clean --onefile --distpath %s", absolutePath, sameDir);
+			  setCommands(cmd);
 			  
 			  //Executes the command
-			  p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd});
+			  p = Runtime.getRuntime().exec(commands);
 			  
 			  if(p != null)
 				  p.waitFor();
 		  }
 		  catch(Exception e){}
 	  }
+	  
+	  /**
+		 * Detects if the OS running is Windows
+		 * @return If the running OS is Windows or not
+		 */
+		private boolean isWindows()
+		{
+			String OS = System.getProperty("os.name");
+			if(OS.startsWith("Windows"))
+				return true;
+			else
+				return false;
+		}
+		
+		/**
+		 * Sets the command arguments
+		 * @param cmd The command to set
+		 */
+		private String[] setCommands(String cmd)
+		{
+			if(isWindows())
+			{
+				commands = new String[] {"cmd", cmd};
+			}
+			else
+			{
+				commands = new String[] {"/bin/sh", "-c", cmd};
+			}
+			
+			return commands;
+		}
 }
