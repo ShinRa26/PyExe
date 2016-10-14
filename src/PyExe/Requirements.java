@@ -2,21 +2,37 @@ package PyExe;
 
 import java.io.*;
 
+/**
+ * Checks for required python libraries PyInstaller & py2exe at startup.
+ * If not installed, the program will attempt to install them via Pip.
+ * 
+ * @author Graham Keenan (GAK)
+ *
+ */
 public class Requirements 
 {
+	//Commands to check for install.
 	private final String pyInstallerCheckCommand = "pip show pyinstaller";
 	private final String py2exeCheckCommand = "pip3 show py2exe";
 	
+	//Commands to install the libraries
 	private final String installPyInstaller = "pip install pyinstaller";
 	private final String installPy2exe = "pip3 install py2exe";
 	
+	//Holds the commands for command line execution
 	private String[] commands;
 	
+	//Flag for all libraries installed.
 	private boolean allInstalled;
 	
+	/**
+	 * Constructor
+	 */
 	public Requirements(){allInstalled = false;}
 	
-	//Checks for installed libraries. If not installed, will attempt to install them.
+	/**
+	 * Checks for installed libraries. If not installed, will attempt to install them.
+	 */
 	public void checkRequirements()
 	{
 		boolean pyInstallerInstalled = installCheck(pyInstallerCheckCommand);
@@ -35,7 +51,11 @@ public class Requirements
 			installPy2exe();
 	}
 	
-	//Checks for the installed libraries via Pip 
+	/**
+	 * Checks for the installed libraries via Pip 
+	 * @param cmd the command to execute
+	 * @return the install status of the library
+	 */
 	private boolean installCheck(String cmd)
 	{
 		Process p = null;
@@ -70,7 +90,9 @@ public class Requirements
 		return installed;
 	}
 	
-	//Installs PyInstaller
+	/**
+	 * Installs PyInstaller via Pip
+	 */
 	private void installPyInstaller()
 	{
 		Process p = null;
@@ -85,7 +107,9 @@ public class Requirements
 		catch(Exception e){}
 	}
 	
-	//Installs py2exe
+	/**
+	 * Installs py2exe via Pip3 (Requires Python3)
+	 */
 	private void installPy2exe()
 	{
 		Process p = null;
@@ -100,7 +124,10 @@ public class Requirements
 		catch(Exception e){}
 	}
 	
-	//Detects Windows
+	/**
+	 * Detects if the OS running is Windows
+	 * @return If the running OS is Windows or not
+	 */
 	private boolean isWindows()
 	{
 		String OS = System.getProperty("os.name");
@@ -110,7 +137,7 @@ public class Requirements
 			return false;
 	}
 	
-	//Accessors
+	//Accessors/Setters
 	public boolean getAllInstalled(){return allInstalled;}
 	private void setAllInstalled(boolean status){allInstalled = status;}
 	private String[] setCommands(String cmd)
