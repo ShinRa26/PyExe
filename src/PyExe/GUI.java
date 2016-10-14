@@ -87,7 +87,7 @@ public class GUI extends JFrame implements ActionListener
 	          {
 	        	  ce.createExecutableOtherOS();
 		          
-		          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
+		          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?\n(These are files created with the exectuable that will not affect the program if removed)", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
 	
 		          if(dialogOption == JOptionPane.YES_OPTION)
 		          {
