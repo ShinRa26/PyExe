@@ -241,7 +241,7 @@ public class GUI extends JFrame implements ActionListener
             		p.waitFor();
             	
             	//Removes the /build folder
-            	String remove = "rmdir build/";
+            	String remove = "rmdir /S /Q build";
             	setCommands(remove);
             	p = Runtime.getRuntime().exec(commands);
             	if(p != null)

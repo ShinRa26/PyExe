@@ -43,6 +43,13 @@ public class CreateExecutable
 	        //Executes command
 	        p = Runtime.getRuntime().exec(commands);
 	        
+	        /**************FIXES HANGING IN WAITFOR METHOD****************/
+			  BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			  String line = "";
+			  while((line = err.readLine())!= null)
+				  System.out.println(line);
+			/*************************************************************/
+	        
 	        if(p != null)
 	        	p.waitFor();
 	      }
@@ -66,6 +73,13 @@ public class CreateExecutable
 			  
 			  //Executes the command
 			  p = Runtime.getRuntime().exec(commands);
+			  
+			  /**************FIXES HANGING IN WAITFOR METHOD****************/
+			  BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			  String line = "";
+			  while((line = err.readLine())!= null)
+				  System.out.println(line);
+			  /*************************************************************/
 			  
 			  if(p != null)
 				  p.waitFor();
