@@ -93,12 +93,8 @@ public class GUI extends JFrame implements ActionListener
 		    exitButton = new JButton("Exit");
 		    exitButton.addActionListener(this);
 
-		    windows = new JCheckBox("On a windows machine?", false);
-		    windows.addActionListener(this);
-
 		    add(pan);
 		    pan.add(fc);
-		    pan.add(windows);
 		    pan.add(createButton);
 		    pan.add(exitButton);
 	  }
@@ -106,8 +102,8 @@ public class GUI extends JFrame implements ActionListener
 	  /**
 	   * Controls the action events (button clicks, etc)
 	   */
-	  public void actionPerformed(ActionEvent ae)
-	  {
+	public void actionPerformed(ActionEvent ae)
+	{
 		//Clicking the Exit button
 	    if(ae.getSource() == exitButton)
 	    {
@@ -121,69 +117,55 @@ public class GUI extends JFrame implements ActionListener
 	    {
 	      try
 	      {
-	    	//Gets the name and path of the selected file and creates a new CreateExectuable object.
-	        File setupFile = fc.getSelectedFile();
-	        filename = setupFile.getName();
-	        filePath = setupFile.getAbsolutePath();
-	        //System.out.println("Source file path: " + filePath);
-	        ce = new CreateExecutable(filename, filePath);
-
-	        boolean checked = windows.isSelected();
-
-	        //On a Windows machine, use py2exe for conversion
-	        if(checked)
-	        {
-	          JOptionPane.showMessageDialog(null, "This feature is still in development and is not available yet!", "Feature Not Available", JOptionPane.INFORMATION_MESSAGE);
-	          //int result = JOptionPane.showConfirmDialog(null, "This option requires that you have at least Python3 installed. Proceed?", "Python3 Required!", JOptionPane.YES_NO_OPTION);
-	          //if(result == JOptionPane.YES_OPTION)
-	        	  //ce.createExecutableOnWindows();
-	        }
-	        //On another OS, use pyinstaller for conversion.
-	        else
-	        {
-	          //Asks the user if they wish to create the executable in the same directory as the script.
-	          int result = JOptionPane.showConfirmDialog(null, "Create executable in the same directory?\n(If your script relies on external libraries and files, click Yes)", "Confirm", JOptionPane.YES_NO_OPTION);
+	    	  //Gets the name and path of the selected file and creates a new CreateExectuable object.
+	          File setupFile = fc.getSelectedFile();
+	          filename = setupFile.getName();
+	          filePath = setupFile.getAbsolutePath();
+	          //System.out.println("Source file path: " + filePath);
+	          ce = new CreateExecutable(filename, filePath);
+	        
+              //Asks the user if they wish to create the executable in the same directory as the script.
+              int result = JOptionPane.showConfirmDialog(null, "Create executable in the same directory?\n(If your script relies on external libraries and files, click Yes)", "Confirm", JOptionPane.YES_NO_OPTION);
+          
+              if(result == JOptionPane.YES_OPTION)
+              {
+        	      ce.createExecutable();
 	          
-	          if(result == JOptionPane.YES_OPTION)
-	          {
-	        	  ce.createExecutableOtherOS();
+        	      //Asks the remove unnecessary files created with the executable
+	              int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?\n(These are files created with the exectuable that will not affect the program if removed)", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
+
+	              if(dialogOption == JOptionPane.YES_OPTION)
+	              {
+	        	      removeUnnecessaryFiles(filePath);
+	              }
+              }
+              else
+              {
+        	      //Creates the executable in a user designated location
+	              String path = getDestinationPath();
+	          
+	              if(path != "")
+	              {
+		              ce.createExecutable(path);
 		          
-	        	  //Asks the remove unnecessary files created with the executable
-		          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?\n(These are files created with the exectuable that will not affect the program if removed)", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
+		              //ASks to remove unnecessary files created with the executable
+		              int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
 	
-		          if(dialogOption == JOptionPane.YES_OPTION)
-		          {
-		        	  removeUnnecessaryFiles(filePath);
-		          }
-	          }
-	          else
-	          {
-	        	  //Creates the executable in a user designated location
-		          String path = getDestinationPath();
-		          
-		          if(path != "")
-		          {
-			          ce.createExecutableOtherOS(path);
-			          
-			          //ASks to remove unnecessary files created with the executable
-			          int dialogOption = JOptionPane.showConfirmDialog(null, "Executable created. Remove unnecessary files?", "Remove Unnecessary Files?", JOptionPane.YES_NO_OPTION);
-		
-			          if(dialogOption == JOptionPane.YES_OPTION)
-			          {
-			        	  removeUnnecessaryFiles(path);
-			          }
-		          }
-	          }
-	        }
+		              if(dialogOption == JOptionPane.YES_OPTION)
+		              {
+		        	      removeUnnecessaryFiles(path);
+		              }
+	              }
+              }
 	      }
-	      //Thrown when attempting to create an executable without selecting a file.
+		  //Thrown when attempting to create an executable without selecting a file.
 	      catch(NullPointerException e)
 	      {
-	        JOptionPane.showMessageDialog(null, "Please select a file!", "Select a file", JOptionPane.WARNING_MESSAGE);
-	        e.printStackTrace();
-	      }
-	    }
-	  }
+	          JOptionPane.showMessageDialog(null, "Please select a file!", "Select a file", JOptionPane.WARNING_MESSAGE);
+		      e.printStackTrace();
+		  }
+	   }
+    }
 
 	  /**
 	   * Gets the user designated location to save the executable to.
@@ -213,6 +195,7 @@ public class GUI extends JFrame implements ActionListener
 	  /**
 	   * Removes the build/ folder and .spec files, leaving just the executable (PyInstaller)
 	   * @param path The location path of the build/ folder and .spec file
+	   * TODO Fix for windows
 	   */
 	  private void removeUnnecessaryFiles(String path)
 	  {

@@ -28,35 +28,10 @@ public class CreateExecutable
 	  }
 
 	  /**
-	   * Creates the setup.py file for py2exe (Windows)
-	   */
-	  private void createSetupFile()
-	  {
-	    CreateSetup setup = new CreateSetup(filename);
-	    setup.createSetupFile();
-	  }
-
-	  /**
-	   * Creates the executable using py2exe (Windows machines)
-	   */
-	  public void createExecutableOnWindows()
-	  {
-	    try
-	    {
-	      //Creates the setup file and  launches the py2exe converion from command line
-	      createSetupFile();
-	      String cmd = "python3 setup.py py2exe";
-	      setCommands(cmd);
-	      Runtime.getRuntime().exec(commands);
-	    }
-	    catch(IOException e){}
-	  }
-
-	  /**
 	   * Creates the executable using pyinstaller in a user designated location (Other OS')
 	   * @param destPath The user designated save location
 	   */
-	  public void createExecutableOtherOS(String destPath)
+	  public void createExecutable(String destPath)
 	  {
 		  Process p = null;
 	      try
@@ -78,7 +53,7 @@ public class CreateExecutable
 	  /**
 	   * Creates the executable using pyinstaller in the same directory as the python script (Other OS')
 	   */
-	  public void createExecutableOtherOS()
+	  public void createExecutable()
 	  {
 		  //Strips the filename from the scripts location to obtain the directory.
 		  String[] stripFilename = absolutePath.split("/");

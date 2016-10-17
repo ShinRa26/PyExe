@@ -2,6 +2,8 @@ package PyExe;
 
 import java.io.*;
 
+import javax.swing.JOptionPane;
+
 /**
  * Checks for required python libraries PyInstaller & py2exe at startup.
  * If not installed, the program will attempt to install them via Pip.
@@ -13,11 +15,9 @@ public class Requirements
 {
 	//Commands to check for install.
 	private final String pyInstallerCheckCommand = "pip show pyinstaller";
-	private final String py2exeCheckCommand = "pip3 show py2exe";
 	
 	//Commands to install the libraries
 	private final String installPyInstaller = "pip install pyinstaller";
-	private final String installPy2exe = "pip3 install py2exe";
 	
 	//Holds the commands for command line execution
 	private String[] commands;
@@ -36,19 +36,14 @@ public class Requirements
 	public void checkRequirements()
 	{
 		boolean pyInstallerInstalled = installCheck(pyInstallerCheckCommand);
-		boolean py2exeInstalled = installCheck(py2exeCheckCommand);
 		
-		if(pyInstallerInstalled && py2exeInstalled)
+		if(pyInstallerInstalled)
 			setAllInstalled(true);
-		else if((!pyInstallerInstalled) && (!py2exeInstalled))
+		else if(!pyInstallerInstalled)
 		{
 			installPyInstaller();
-			installPy2exe();
+			setAllInstalled(true);
 		}
-		else if(!pyInstallerInstalled)
-			installPyInstaller();
-		else if(!py2exeInstalled)
-			installPy2exe();
 	}
 	
 	/**
@@ -79,11 +74,12 @@ public class Requirements
 					installed = true;
 					break;
 				}
+				else
+				{
+					installed = false;
+					break;
+				}
 			}
-			
-			while((line = error.readLine()) != null)
-				System.out.println("Error stream: " + line);
-			
 		}
 		catch(Exception e){}
 		
@@ -101,23 +97,7 @@ public class Requirements
 		try
 		{
 			p = Runtime.getRuntime().exec(commands);
-			if(p != null)
-				p.waitFor();
-		}
-		catch(Exception e){}
-	}
-	
-	/**
-	 * Installs py2exe via Pip3 (Requires Python3)
-	 */
-	private void installPy2exe()
-	{
-		Process p = null;
-		setCommands(installPy2exe);
-		
-		try
-		{
-			p = Runtime.getRuntime().exec(commands);
+			JOptionPane.showMessageDialog(null, "Installing PyInstaller...", "Installing PyInstaller", JOptionPane.INFORMATION_MESSAGE);
 			if(p != null)
 				p.waitFor();
 		}
@@ -143,7 +123,7 @@ public class Requirements
 	private String[] setCommands(String cmd)
 	{
 		if(isWindows())
-			commands = new String[] {"cmd", cmd};
+			commands = new String[] {"cmd", "/C", cmd};
 		else
 			commands = new String[] {"/bin/sh", "-c", cmd};
 		
