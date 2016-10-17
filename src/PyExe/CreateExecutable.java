@@ -28,7 +28,7 @@ public class CreateExecutable
 	  }
 
 	  /**
-	   * Creates the executable using pyinstaller in a user designated location (Other OS')
+	   * Creates the executable using pyinstaller in a user designated location
 	   * @param destPath The user designated save location
 	   */
 	  public void createExecutable(String destPath)
@@ -38,7 +38,6 @@ public class CreateExecutable
 	      {	
 	    	//Creates the command to start pyinstaller
 	        String cmd = String.format("pyinstaller \"%s\" --clean --onefile --distpath %s", absolutePath, destPath);
-	        //System.out.println("Command format: " + cmd);
 	        setCommands(cmd);
 	        
 	        //Executes command
@@ -51,18 +50,14 @@ public class CreateExecutable
 	  }
 	  
 	  /**
-	   * Creates the executable using pyinstaller in the same directory as the python script (Other OS')
+	   * Creates the executable using pyinstaller in the same directory as the python script
 	   */
 	  public void createExecutable()
 	  {
 		  //Strips the filename from the scripts location to obtain the directory.
-		  String[] stripFilename = absolutePath.split("/");
-		  String sameDir = "";
-		  for(int i = 0; i < stripFilename.length - 1; i++)
-			  sameDir += stripFilename[i] + "/";
-
-		  Process p = null;
+		  String sameDir = stripFilename();
 		  
+		  Process p = null;
 		  try
 		  {
 			  //Creates the command to start pyinstaller
@@ -76,6 +71,30 @@ public class CreateExecutable
 				  p.waitFor();
 		  }
 		  catch(Exception e){}
+	  }
+	  
+	  /**
+	   * Strips the filename from the path to get the host directory path
+	   * @return the host directory path
+	   */
+	  private String stripFilename()
+	  {
+		  String sameDir = "";
+		  if(isWindows())
+		  {
+			  String[] stripFilename = absolutePath.split("\\\\");
+			  for(int i = 0; i < stripFilename.length - 1; i++)
+				  sameDir += stripFilename[i] + "\\";
+			  
+			  return sameDir;
+		  }
+		  else
+		  {
+			  String[] stripFilename = absolutePath.split("/");
+			  for(int i = 0; i < stripFilename.length - 1; i++)
+				  sameDir += stripFilename[i] + "/"; 
+			  return sameDir;
+		  }
 	  }
 	  
 	  /**
@@ -99,7 +118,7 @@ public class CreateExecutable
 		{
 			if(isWindows())
 			{
-				commands = new String[] {"cmd", cmd};
+				commands = new String[] {"cmd", "/C", cmd};
 			}
 			else
 			{

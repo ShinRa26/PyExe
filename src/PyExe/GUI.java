@@ -16,10 +16,10 @@ public class GUI extends JFrame implements ActionListener
 	  private JPanel pan;
 	  private JFileChooser fc;
 	  private JButton createButton, exitButton;
-	  private JCheckBox windows;
 
 	  private String filename;
 	  private String filePath;
+	  private String[] commands;
 	  
 	  private CreateExecutable ce;
 	  private Requirements req;
@@ -208,22 +208,52 @@ public class GUI extends JFrame implements ActionListener
             String[] stripFilename = filename.split("\\.");
             String stripped = stripFilename[0];
             
-            String moveToSaveDir = "cd " + path;
-            p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", moveToSaveDir});
-            if(p != null)
-            	p.waitFor();
-      
-            //removes the /build folder
-            String cmd1 = "rm -rf build/";
-            p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd1});
-            if(p != null)
-            	p.waitFor();
-            
-            //Removes the shitty .spec file
-            String cmd2 = String.format("rm %s.spec", stripped);
-            p = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd2});
-            if(p != null)
-            	p.waitFor();
+            //If Unix-based OS
+            if(!isWindows())
+            {
+	            String moveToSaveDir = "cd " + path;
+	            setCommands(moveToSaveDir);
+	            p = Runtime.getRuntime().exec(commands);
+	            if(p != null)
+	            	p.waitFor();
+	      
+	            //removes the /build folder
+	            String cmd1 = "rm -rf build/";
+	            setCommands(cmd1);
+	            p = Runtime.getRuntime().exec(commands);
+	            if(p != null)
+	            	p.waitFor();
+	            
+	            //Removes the shitty .spec file
+	            String cmd2 = String.format("rm %s.spec", stripped);
+	            setCommands(cmd2);
+	            p = Runtime.getRuntime().exec(commands);
+	            if(p != null)
+	            	p.waitFor();
+            }
+            //If on Windows
+            else
+            {
+            	String moveToSaveDir = "cd " + path;
+            	setCommands(moveToSaveDir);
+            	p = Runtime.getRuntime().exec(commands);
+            	if(p != null)
+            		p.waitFor();
+            	
+            	//Removes the /build folder
+            	String remove = "rmdir build/";
+            	setCommands(remove);
+            	p = Runtime.getRuntime().exec(commands);
+            	if(p != null)
+            		p.waitFor();
+            	
+            	//Removes the shitty .spec file
+            	String removeSpec = String.format("del %s.spec", stripped);
+            	setCommands(removeSpec);
+            	p = Runtime.getRuntime().exec(commands);
+            	if(p != null)
+            		p.waitFor();
+            }
 
           }
           catch(Exception e){}
@@ -233,4 +263,33 @@ public class GUI extends JFrame implements ActionListener
           if(result == 0)
             System.exit(0);
 	  }
+	  
+		
+	  /**
+	   * Detects if the OS running is Windows
+	   * @return If the running OS is Windows or not
+	   */
+	  private boolean isWindows()
+	  {
+		  String OS = System.getProperty("os.name");
+		  if(OS.startsWith("Windows"))
+			  return true;
+		  else
+			  return false;
+	  }
+	  
+	  /**
+	   * Sets the commands for command line execution
+	   * @param cmd the command to set
+	   * @return the array of commands
+	   */
+	  private String[] setCommands(String cmd)
+		{
+			if(isWindows())
+				commands = new String[] {"cmd", "/C", cmd};
+			else
+				commands = new String[] {"/bin/sh", "-c", cmd};
+			
+			return commands;
+		}
 }

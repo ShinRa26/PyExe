@@ -9,13 +9,14 @@ public class Program
 {
 	public static void main(String[] args)
 	{
-		/*
+		
 		GUI g = new GUI();
-		*/
+		
+		/*
 		try
 		{
 			Process p = null;
-			p = Runtime.getRuntime().exec("cmd /C pip3 install py2exe");
+			p = Runtime.getRuntime().exec("cmd /C pyinstaller \"C:\\Users\\graha\\Desktop\\Main.py\" --clean --onefile --distpath C:\\Users\\graha\\Desktop\\");
 			BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			BufferedReader err = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			
@@ -32,5 +33,6 @@ public class Program
 				p.waitFor();
 		}
 		catch(Exception e){}
+		*/
 	}
 }

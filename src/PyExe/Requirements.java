@@ -76,8 +76,7 @@ public class Requirements
 				}
 				else
 				{
-					installed = false;
-					break;
+					continue;
 				}
 			}
 		}
