@@ -47,7 +47,7 @@ public class Requirements
 	}
 	
 	/**
-	 * Checks for the installed libraries via Pip 
+	 * Checks for the installed libraries via Pip.
 	 * @param cmd the command to execute
 	 * @return the install status of the library
 	 */

@@ -1,7 +1,7 @@
 package PyExe;
 
 /**
- * Launches the applicaiton
+ * Launches the application.
  * @author Graham Keenan (GAK)
  *
  */

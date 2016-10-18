@@ -4,8 +4,7 @@ import java.io.*;
 
 /**
  * Creates the executable file from the python script.
- * Windows machines: py2exe
- * Other OS': pyinstaller 
+ * PyInstaller is used to create the executables.
  * @author Graham Keenan (GAK)
  *
  */

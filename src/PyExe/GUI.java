@@ -73,7 +73,7 @@ public class GUI extends JFrame implements ActionListener
 		  }
 		  else
 		  {
-			  JOptionPane.showMessageDialog(null, "Error when checking/installing required python libraries via Pip.", "Error: Pip Error", JOptionPane.ERROR_MESSAGE);
+			  JOptionPane.showMessageDialog(null, "Error when checking/installing required python libraries via Pip. Do you have pip installed?", "Error: Pip Error", JOptionPane.ERROR_MESSAGE);
 			  System.exit(1);
 		  }
 	  }
