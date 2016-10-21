@@ -5,7 +5,7 @@ import java.io.*;
 import javax.swing.JOptionPane;
 
 /**
- * Checks for required python libraries PyInstaller & py2exe at startup.
+ * Checks for required python libraries PyInstaller at startup.
  * If not installed, the program will attempt to install them via Pip.
  * 
  * @author Graham Keenan (GAK)
