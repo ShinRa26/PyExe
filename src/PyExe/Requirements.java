@@ -14,10 +14,10 @@ import javax.swing.JOptionPane;
 public class Requirements 
 {
 	//Commands to check for install.
-	private final String pyInstallerCheckCommand = "pip show pyinstaller";
+	private final String pyInstallerCheckCommand = "pip3 show pyinstaller";
 	
 	//Commands to install the libraries
-	private final String installPyInstaller = "pip install pyinstaller";
+	private final String installPyInstaller = "pip3 install pyinstaller";
 	
 	//Holds the commands for command line execution
 	private String[] commands;
@@ -124,7 +124,7 @@ public class Requirements
 		if(isWindows())
 			commands = new String[] {"cmd", "/C", cmd};
 		else
-			commands = new String[] {"/bin/sh", "-c", cmd};
+			commands = new String[] {"/bin/bash", "-c", cmd};
 		
 		return commands;
 	}
